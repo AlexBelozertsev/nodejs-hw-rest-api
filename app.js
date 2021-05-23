@@ -1,7 +1,7 @@
 const express = require('express')
 const logger = require('morgan')
 const cors = require('cors')
-const {HttpCode} = require('./helpers/constants')
+const { HttpCode } = require('./helpers/constants')
 const contactsRouter = require('./routes/api/contacts')
 
 const app = express()
@@ -26,10 +26,10 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
   err.status = err.status ? err.status : HttpCode.INTERNAL_SERVER_ERROR
   res.status(err.status).json({
-    status: err.status === 500 ? 'fail' : 'error',
+    status: err.status === HttpCode.INTERNAL_SERVER_ERROR ? 'fail' : 'error',
     code: err.status,
     message: err.message,
-    data: err.status === 500 ? 'Internal Server Error' : err.data
+    data: err.status === HttpCode.INTERNAL_SERVER_ERROR ? 'Internal Server Error' : err.data
   })
 })
 
