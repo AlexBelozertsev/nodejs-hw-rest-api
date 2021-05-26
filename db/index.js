@@ -2,13 +2,17 @@ const { MongoClient } = require('mongodb')
 require('dotenv').config()
 const uriDB = process.env.URI_DB
 
-const db = new MongoClient.connect(uriDB, { useNewUrlParser: true, poolSize: 5 })
+const db = MongoClient.connect(uriDB, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    poolSize: 5
+})
 
 process.on('SIGINT', async () => {
     const client = await db
     client.close()
-    console.log('Connection for DB disconnected')
-    process.exit()
+    console.log('Connection to DB disconnected')
+    process.exit(1)
 })
 
 module.exports = db

@@ -35,7 +35,9 @@ router.post('/', validationCreateContact, async (req, res, next) => {
   try {
     const contact = await Contacts.addContact(req.body)
     if (contact) {
-    return res.status(HttpCode.CREATED).json({ status: 'success', code: HttpCode.CREATED, data: { contact } })
+      return res.status(HttpCode.CREATED).json({
+        status: 'success', code: HttpCode.CREATED, data: { contact }
+      })
     } else {
       return res.json({
         status: HttpCode.BAD_REQUEST,
@@ -52,7 +54,9 @@ router.delete('/:contactId', async (req, res, next) => {
   try {
     const contact = await Contacts.removeContact(req.params.contactId)
     if (contact) {
-      return res.status(HttpCode.OK).json({ status: 'success', code: HttpCode.OK, message: 'contact deleted' })
+      return res.status(HttpCode.OK).json({
+        status: 'success', code: HttpCode.OK, message: 'contact deleted', data: { contact }
+      })
     } else {
       return res.json({
         status: HttpCode.NOT_FOUND,

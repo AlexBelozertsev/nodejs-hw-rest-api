@@ -6,14 +6,14 @@ const schemaCreateContact = Joi.object({
   name: Joi.string().alphanum().min(2).max(30).required(),
   email: Joi.string()
     .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).optional(),
-  phone: Joi.string().min(7).max(13).optional(),
+  phone: Joi.string().min(7).max(17).optional(),
 })
 
 const schemaUpdateContact = Joi.object({
   name: Joi.string().alphanum().min(2).max(30).optional(),
   email: Joi.string()
     .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).optional(),
-  phone: Joi.string().min(7).max(13).optional(),
+  phone: Joi.string().min(7).max(17).optional(),
 }).or('name', 'email', 'phone')
 
 const validate = async (schema, obj, next) => {

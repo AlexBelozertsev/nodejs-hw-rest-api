@@ -1,26 +1,17 @@
-const fs = require('fs/promises')
-const path = require('path')
-const shortid = require('shortid')
+const db = require('../db')
+const { ObjectId } = require('mongodb')
 
-const contactsList = path.join(__dirname, '/contacts.json')
-
-async function getContacts() {
-  const data = await fs.readFile(contactsList, 'utf-8')
-  return JSON.parse(data)
-}
-
-function writeNewList(initialList, newList) {
-  return fs.writeFile(
-    initialList,
-    JSON.stringify(newList, null, '\t'),
-    'utf-8',
-    (err) => { if (err) console.error(err) }
-  )
+const getContacts = async (db, name) => {
+  const client = await db
+  const collection = client.db().collection(name)
+  return collection
 }
 
 const getAllContacts = async () => {
   try {
-    return await getContacts()
+    const contactsCollection = await getContacts(db, 'contacts')
+    const allContacts = await contactsCollection.find({}).toArray()
+    return allContacts
   } catch (error) {
     console.log(error)
   }
@@ -28,8 +19,9 @@ const getAllContacts = async () => {
 
 const getContactById = async (contactId) => {
   try {
-    const contacts = await getContacts()
-    const [findedContact] = contacts.filter(contact => contact.id === contactId)
+    const contactsCollection = await getContacts(db, 'contacts')
+    const objectId = new ObjectId(contactId)
+    const [findedContact] = await contactsCollection.find({ _id: objectId }).toArray()
     return findedContact
   } catch (error) {
     console.log(error)
@@ -38,14 +30,10 @@ const getContactById = async (contactId) => {
 
 const removeContact = async (contactId) => {
   try {
-    const contacts = await getContacts()
-    const index = contacts.findIndex(contact => contact.id === contactId)
-    if (index !== -1) {
-      const result = contacts.splice(index, 1)
-      await writeNewList(contactsList, contacts)
-      return result
-    }
-    return null
+    const contactsCollection = await getContacts(db, 'contacts')
+    const objectId = new ObjectId(contactId)
+    const {value: deletedContact} = await contactsCollection.findOneAndDelete({ _id: objectId })
+    return deletedContact
   } catch (error) {
     console.log(error)
   }
@@ -53,14 +41,10 @@ const removeContact = async (contactId) => {
 
 const addContact = async (body) => {
   try {
-    const contacts = await getContacts()
-    const contactNew = {
-      id: shortid.generate(),
-      ...body,
-    }
-    const newContactsList = [contactNew, ...contacts]
-    await writeNewList(contactsList, newContactsList)
-    return contactNew
+    const contactsCollection = await getContacts(db, 'contacts')
+    const contactNew = {...body}
+    const {ops: [newContactsList]} = await contactsCollection.insertOne(contactNew)
+    return newContactsList
   } catch (error) {
     console.log(error)
   }
@@ -68,13 +52,14 @@ const addContact = async (body) => {
 
 const updateContact = async (contactId, body) => {
   try {
-    const contacts = await getContacts()
-    const findedContact = contacts.find(contact => contact.id === contactId)
-    if (findedContact) {
-      Object.assign(findedContact, body)
-      await writeNewList(contactsList, contacts)
-    }
-    return findedContact
+    const contactsCollection = await getContacts(db, 'contacts')
+    const objectId = new ObjectId(contactId)
+    const {value: updatedContact} = await contactsCollection.findOneAndUpdate(
+      { _id: objectId },
+      { $set: body },
+      { returnOriginal: false }
+    )
+    return updatedContact
   } catch (error) {
     console.log(error)
   }
