@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const Contacts = require('../../model')
 const { HttpCode } = require('../../helpers/constants')
+const { ErrorHandler } = require('../../helpers/errorHandler')
 const { validationCreateContact, validationUpdateContact } = require('../../validation/contacts')
 
 router.get('/', async (req, res, next) => {
@@ -19,12 +20,11 @@ router.get('/:contactId', async (req, res, next) => {
     if (contact) {
       return res.status(HttpCode.OK).json({ status: 'success', code: HttpCode.OK, data: { contact } })
     } else {
-      return res.json({
-        status: HttpCode.NOT_FOUND,
-        message: 'Contact Not Found',
-        code: HttpCode.NOT_FOUND,
-        data: 'Not Found'
-      })
+      return new ErrorHandler(
+        HttpCode.NOT_FOUND,
+        `error: Contact Not Found`,
+        'Not Found'
+      )
     }
   } catch (error) {
     next(error)
@@ -39,11 +39,11 @@ router.post('/', validationCreateContact, async (req, res, next) => {
         status: 'success', code: HttpCode.CREATED, data: { contact }
       })
     } else {
-      return res.json({
-        status: HttpCode.BAD_REQUEST,
-        message: 'missing required name field',
-        data: 'missing required name field'
-      })
+      return new ErrorHandler(
+        HttpCode.BAD_REQUEST,
+        'error: missing required name field',
+        'missing required name field'
+      )
     }
   } catch (error) {
     next(error)
@@ -58,11 +58,11 @@ router.delete('/:contactId', async (req, res, next) => {
         status: 'success', code: HttpCode.OK, message: 'contact deleted', data: { contact }
       })
     } else {
-      return res.json({
-        status: HttpCode.NOT_FOUND,
-        message: 'Contact Not Found',
-        data: 'Not Found'
-      })
+      return new ErrorHandler(
+        HttpCode.NOT_FOUND,
+        `error: Contact Not Found`,
+        'Not Found'
+      )
     }
   } catch (error) {
     next(error)
@@ -76,13 +76,17 @@ router.put('/:contactId', validationUpdateContact, async (req, res, next) => {
       if (contact) {
         return res.json({ status: 'success', code: HttpCode.OK, data: { contact } })
       }
-      return res.json({ status: 'error', code: HttpCode.NOT_FOUND, message: 'Not found' })
+      return new ErrorHandler(
+        HttpCode.NOT_FOUND,
+        `error: Contact Not Found`,
+        'Not Found'
+      )
     } else {
-      return res.json({
-        status: HttpCode.BAD_REQUEST,
-        message: 'missing fields',
-        data: 'missing fields'
-      })
+      return new ErrorHandler(
+        HttpCode.BAD_REQUEST,
+        'missing fields',
+        'missing fields'
+      )
     }
   } catch (error) {
     next(error)
