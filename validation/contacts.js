@@ -45,7 +45,7 @@ module.exports = {
     return validate(schemaUpdateStatusContact, req.body, next)
   },
   validationMongoId: (req, res, next) => {
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    if (!mongoose.isValidObjectId(req.params.id)) {
       return next({
       status: HttpCode.BAD_REQUEST,
       message: `Invalid ObjectId`,

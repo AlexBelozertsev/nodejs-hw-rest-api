@@ -11,7 +11,7 @@ const getAllContacts = async () => {
 
 const getContactById = async (contactId) => {
   try {
-    const findedContact = await Contact.findOne({ _id: contactId })
+    const findedContact = await Contact.findById(contactId)
     return findedContact
   } catch (error) {
     console.log(error)
@@ -20,7 +20,7 @@ const getContactById = async (contactId) => {
 
 const removeContact = async (contactId) => {
   try {
-    const deletedContact = await Contact.findOneAndRemove({ _id: contactId })
+    const deletedContact = await Contact.findByIdAndRemove(contactId)
     return deletedContact
   } catch (error) {
     console.log(error)
@@ -38,8 +38,8 @@ const addContact = async (body) => {
 
 const updateContact = async (contactId, body) => {
   try {
-    const updatedContact = await Contact.findOneAndUpdate(
-      { _id: contactId },
+    const updatedContact = await Contact.findByIdAndUpdate(
+      contactId,
       { ...body },
       { new: true }
     )
@@ -51,12 +51,12 @@ const updateContact = async (contactId, body) => {
 
 const updateStatusContact = async (contactId, body) => {
   try {
-      const updatedContact = await Contact.findOneAndUpdate(
-      { _id: contactId },
+      const updatedStatus = await Contact.findByIdAndUpdate(
+      contactId,
       { ...body },
       { new: true }
     )
-    return updatedContact
+    return updatedStatus
   } catch (error) {
     console.log(error)
   }

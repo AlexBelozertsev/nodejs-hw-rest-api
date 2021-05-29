@@ -1,5 +1,4 @@
 const { HttpCode } = require('../helpers/constants')
-const { ErrorHandler } = require('../helpers/errorHandler')
 const Contacts = require('../repositories/contacts')
 
 const getAllContacts = async (req, res, next) => {
@@ -18,11 +17,8 @@ const getContactById = async (req, res, next) => {
       console.log(contact);
       return res.status(HttpCode.OK).json({ status: 'success', code: HttpCode.OK, data: { contact } })
     } else {
-      return new ErrorHandler(
-        HttpCode.NOT_FOUND,
-        `error: Contact Not Found`,
-        'Not Found'
-      )
+      return res.status(HttpCode.NOT_FOUND).json({
+        status: 'error', code: HttpCode.NOT_FOUND, message: 'error: Contact Not Found', data: 'Not Found' })
     }
   } catch (error) {
     next(error)
@@ -37,11 +33,12 @@ const addContact = async (req, res, next) => {
         status: 'success', code: HttpCode.CREATED, data: { contact }
       })
     } else {
-      return new ErrorHandler(
-        HttpCode.BAD_REQUEST,
-        'error: missing required name field',
-        'missing required name field'
-      )
+      return res.status(HttpCode.BAD_REQUEST).json({
+        status: 'error',
+        code: HttpCode.BAD_REQUEST,
+        message: 'error: missing required name field',
+        data: 'missing required name field'
+      })
     }
   } catch (error) {
     next(error)
@@ -56,11 +53,8 @@ const removeContact = async (req, res, next) => {
         status: 'success', code: HttpCode.OK, message: 'contact deleted', data: { contact }
       })
     } else {
-      return new ErrorHandler(
-        HttpCode.NOT_FOUND,
-        `error: Contact Not Found`,
-        'Not Found'
-      )
+      return res.status(HttpCode.NOT_FOUND).json({
+        status: 'error', code: HttpCode.NOT_FOUND, message: 'error: Contact Not Found', data: 'Not Found' })
     }
   } catch (error) {
     next(error)
@@ -74,17 +68,15 @@ const updateContact = async (req, res, next) => {
       if (contact) {
         return res.status(HttpCode.OK).json({ status: 'success', code: HttpCode.OK, data: { contact } })
       }
-      return new ErrorHandler(
-        HttpCode.NOT_FOUND,
-        `error: Contact Not Found`,
-        'Not Found'
-      )
+      return res.status(HttpCode.NOT_FOUND).json({
+        status: 'error', code: HttpCode.NOT_FOUND, message: 'error: Contact Not Found', data: 'Not Found' })
     } else {
-      return new ErrorHandler(
-        HttpCode.BAD_REQUEST,
-        'missing fields',
-        'missing fields'
-      )
+      return res.status(HttpCode.BAD_REQUEST).json({
+        status: 'error',
+        code: HttpCode.BAD_REQUEST,
+        message: 'error: missing fields',
+        data: 'missing fields'
+      })
     }
   } catch (error) {
     next(error)
