@@ -25,7 +25,7 @@ This app is a tutorial project for creating and working with a user contacts dat
   `{ "name": "Contact Name", "email": "contact@gmail.com", "phone": "+38(0--)123-45-67" }`
   If the request is entered correctly, the response may look like this:
 
-  ````{
+  ```{
     "status": "success",
     "code": 201,
     "data": {
@@ -39,14 +39,14 @@ This app is a tutorial project for creating and working with a user contacts dat
             "updatedAt": "2021-05-31T19:50:29.347Z"
         }
     }
-  }```
-  ````
+  }
+  ```
 
 - The user can get a list of all his contacts by sending a request to the router `GET`:
   `http://localhost:3000/api/contacts`
   If the request is entered correctly, the response may look like this:
 
-  ````{
+  ```{
     "status": "success",
     "code": 200,
     "data": {
@@ -68,14 +68,14 @@ This app is a tutorial project for creating and working with a user contacts dat
             ...
         ]
     }
-  }```
-  ````
+  }
+  ```
 
 - Knowing the contact ID, the user can find it by sending a request to the router `GET`:
   `http://localhost:3000/api/contacts/<contact ID>`
   If the request is entered correctly, the response may look like this:
 
-  ````{
+  ```{
     "status": "success",
     "code": 200,
     "data": {
@@ -87,8 +87,8 @@ This app is a tutorial project for creating and working with a user contacts dat
             "phone": "(992) 914-3792"
             }
         }
-    }```
-  ````
+    }
+  ```
 
 - Knowing the contact ID, the user can change the contact by sending a request to the router `PUT`:
   `http://localhost:3000/api/contacts/<contact ID>`
@@ -96,7 +96,7 @@ This app is a tutorial project for creating and working with a user contacts dat
   `{ "name": "NewContact Name" }` or `{ "phone": "+38(0--)123-45-67" }` ets.
   If the request is entered correctly, the response may look like this:
 
-  ````{
+  ```{
     "status": "success",
     "code": 200,
     "data": {
@@ -110,8 +110,8 @@ This app is a tutorial project for creating and working with a user contacts dat
             "updatedAt": "2021-05-31T19:59:12.266Z"
             }
         }
-    }```
-  ````
+    }
+  ```
 
 - Knowing the contact ID, the user can change the status of the contact by sending a request to the router `PATCH`:
   `http://localhost:3000/api/contacts/<contact ID>/favorite`
@@ -119,7 +119,7 @@ This app is a tutorial project for creating and working with a user contacts dat
   `{ "favorite": true }`
   If the request is entered correctly, the response may look like this:
 
-  ````{
+  ```{
     "status": "success",
     "code": 200,
     "data": {
@@ -133,14 +133,14 @@ This app is a tutorial project for creating and working with a user contacts dat
             "updatedAt": "2021-05-31T20:01:41.450Z"
             }
         }
-    }```
-  ````
+    }
+  ```
 
 - Knowing the contact ID, the user can delete the contact by sending a request to the router `DELETE`:
   `http://localhost:3000/api/contacts/<contact ID>`
   If the request is entered correctly, the response may look like this:
 
-  ````{
+  ```{
     "status": "success",
     "code": 200,
     "message": "contact deleted",
@@ -155,5 +155,5 @@ This app is a tutorial project for creating and working with a user contacts dat
             "updatedAt": "2021-05-31T20:01:41.450Z"
         }
     }
-  }```
-  ````
+  }
+  ```
