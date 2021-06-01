@@ -6,18 +6,24 @@
 
 This app is a tutorial project for creating and working with a user contacts database. During the training process, the file structure and additional functionality can change significantly, so keep an eye on the relevance of the application version. Application works with MongoDB database.
 
-#### Usage:
+### Usage:
 
 1. Start
+
+---
 
 - `npm start` - server start in production mode
 - `npm run start:dev` - server start in development mode
 
 2. Recommended for use with:
 
+---
+
 - Postman
 
 3. Using
+
+---
 
 - The user can create a contact by sending a request to the router `POST`:
   `http://localhost:3000/api/contacts`
