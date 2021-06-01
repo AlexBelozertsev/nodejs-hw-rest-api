@@ -2,8 +2,6 @@
 
 ## GoIT Node.js Homework
 
----
-
 ### Overview
 
 This app is a tutorial project for creating and working with a user contacts database. During the training process, the file structure and additional functionality can change significantly, so keep an eye on the relevance of the application version. Application works with MongoDB database.
