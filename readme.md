@@ -27,9 +27,7 @@ This app is a tutorial project for creating and working with a user contacts dat
   `http://localhost:3000/api/contacts`
   in the request it is necessary to send the body of the added contact for example:
 
-  ````{ "name": "Contact Name",
-       "email": "contact@gmail.com",
-       "phone": "+38(0--)123-45-67" }```
+  `{ "name": "Contact Name", "email": "contact@gmail.com", "phone": "+38(0--)123-45-67" }`
 
   If the request is entered correctly, the response may look like this:
 
@@ -48,7 +46,7 @@ This app is a tutorial project for creating and working with a user contacts dat
         }
     }
   }
-  ````
+  ```
 
 - The user can get a list of all his contacts by sending a request to the router `GET`:
   `http://localhost:3000/api/contacts`
