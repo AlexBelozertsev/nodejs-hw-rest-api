@@ -2,33 +2,35 @@
 
 ## GoIT Node.js Homework
 
+---
+
 ### Overview
 
 This app is a tutorial project for creating and working with a user contacts database. During the training process, the file structure and additional functionality can change significantly, so keep an eye on the relevance of the application version. Application works with MongoDB database.
 
+---
+
 ### Usage:
 
 1. Start
-
----
 
 - `npm start` - server start in production mode
 - `npm run start:dev` - server start in development mode
 
 2. Recommended for use with:
 
----
-
 - Postman
 
 3. Using
 
----
-
 - The user can create a contact by sending a request to the router `POST`:
   `http://localhost:3000/api/contacts`
   in the request it is necessary to send the body of the added contact for example:
-  `{ "name": "Contact Name", "email": "contact@gmail.com", "phone": "+38(0--)123-45-67" }`
+
+  ````{ "name": "Contact Name",
+       "email": "contact@gmail.com",
+       "phone": "+38(0--)123-45-67" }```
+
   If the request is entered correctly, the response may look like this:
 
   ```{
@@ -46,7 +48,7 @@ This app is a tutorial project for creating and working with a user contacts dat
         }
     }
   }
-  ```
+  ````
 
 - The user can get a list of all his contacts by sending a request to the router `GET`:
   `http://localhost:3000/api/contacts`
@@ -99,7 +101,8 @@ This app is a tutorial project for creating and working with a user contacts dat
 - Knowing the contact ID, the user can change the contact by sending a request to the router `PUT`:
   `http://localhost:3000/api/contacts/<contact ID>`
   in the request, you must send the body of the contact to be changed for example:
-  `{ "name": "NewContact Name" }` or `{ "phone": "+38(0--)123-45-67" }` ets.
+  `{ "name": "NewContact Name" }`
+  or `{ "phone": "+38(0--)123-45-67" }` ets.
   If the request is entered correctly, the response may look like this:
 
   ```{
