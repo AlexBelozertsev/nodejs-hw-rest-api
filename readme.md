@@ -21,12 +21,78 @@ This app is a tutorial project for creating and working with a user contacts dat
 
 3. Using
 
+- To start working with his collection of contacts, the user needs to register. To do this, you need to go to the next router `POST`: `http://localhost:3000/api/users/signup` And create your account by filling in the required fields `e-mail` and `password`(min 6 symbols) in the body. You can also specify Username and subscription option for example:
+
+  `{ "name": "NewUser", "email": "newUser@gmail.com", "password": "123456789", "subscription": "starter" }`
+
+  If the request is entered correctly, the response may look like this:
+
+  ```{
+    "status": "success",
+    "code": 201,
+    "data": {
+        "id": "60bbe66df2443c3c5ca47dfe",
+        "email": "newUser@gmail.com",
+        "subscription": "starter"
+    }
+  }
+  ```
+
+- To go through the login procedure, you need to go to the following route
+  `POST`: `http://localhost:3000/api/users/login` and specify the required fields `e-mail` and your `password` in the request body for example: `{ "email": "newUser@gmail.com", "password": "123456789" }`
+  If the request is entered correctly, the response may look like this:
+
+  ```{
+      "status": "success",
+      "code": 200,
+      "data": {
+          "token": "eyJhbGciOiJIUzI1NiIR5cCI6IkpXVCJ9.eyJpZCI6IjYwYmI2MjVkZmY4YzJhMTM0NDVhMDBkMSII6MTYyMjg5NTEzNiwiZXhwIjoxNjIyOTgxNTM2fQ.MPTW0xE8_jBjoCD7WBuvnb2qLaNl5Ra1X-WyIVtIo",
+          "email": "newUser@gmail.com",
+          "subscription": "starter"
+      }
+    }
+  ```
+
+Pay attention to the token in the response. On subsequent requests to the server, the token will be required to work with custom settings.
+
+- To view the data of the current user, you need to go to the following route (a token is required):
+  `GET`: `http://localhost:3000/api/users/current` If the request is entered correctly, the response may look like this:
+
+  ```{
+    "status": "success",
+    "code": 200,
+    "data": {
+        "email": "example@test.com",
+        "subscription": "pro"
+    }
+  }
+  ```
+
+- To change the subscription status of the current user, you need to go to the following route (a token is required):
+  `PATCH`:`http://localhost:3000/api/users/current` nd change the subscription status by specifying one of the options in the body: `['starter', 'pro', 'business']`. The request body might look like this:
+  `{ "subscription": "pro" }`
+  If the request is entered correctly, the response may look like this:
+
+  ```
+  {
+    "status": "success",
+    "code": 200,
+    "data": {
+        "name": "Example",
+        "email": "example@test.com",
+        "subscription": "pro"
+    }
+  }
+  ```
+
+- To logout, you need to go to the following route (a token is required):
+  `POST`: `http://localhost:3000/api/users/logout`
+  If the request is entered correctly, you can see:`204 No Content`
+
 - The user can create a contact by sending a request to the router `POST`:
   `http://localhost:3000/api/contacts`
   in the request it is necessary to send the body of the added contact for example:
-
   `{ "name": "Contact Name", "email": "contact@gmail.com", "phone": "+38(0--)123-45-67" }`
-
   If the request is entered correctly, the response may look like this:
 
   ```{
@@ -79,20 +145,20 @@ This app is a tutorial project for creating and working with a user contacts dat
   `http://localhost:3000/api/contacts/<contact ID>`
   If the request is entered correctly, the response may look like this:
 
-  ```{
-    "status": "success",
-    "code": 200,
-    "data": {
-        "contact": {
-            "favorite": false,
-            "_id": "60b201e07cd92b1c88fa3f61",
-            "name": "Allen Raymond",
-            "email": "nulla.ante@vestibul.co.uk",
-            "phone": "(992) 914-3792"
-            }
-        }
-    }
-  ```
+```{
+  "status": "success",
+  "code": 200,
+  "data": {
+      "contact": {
+          "favorite": false,
+          "_id": "60b201e07cd92b1c88fa3f61",
+          "name": "Allen Raymond",
+          "email": "nulla.ante@vestibul.co.uk",
+          "phone": "(992) 914-3792"
+          }
+      }
+  }
+```
 
 - Knowing the contact ID, the user can change the contact by sending a request to the router `PUT`:
   `http://localhost:3000/api/contacts/<contact ID>`
