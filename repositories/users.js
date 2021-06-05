@@ -1,20 +1,49 @@
 const User = require('../model/userShema')
 
 const findById = async (id) => {
-  return await User.findById(id)
+  try {
+    return await User.findById(id)
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 const findByEmail = async (email) => {
-  return await User.findOne({ email })
+  try {
+    return await User.findOne({ email })
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 const createUser = async (body) => {
-  const user = new User(body)
-  return await user.save()
+  try {
+    const user = new User(body)
+    return await user.save()
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 const updateToken = async (id, token) => {
-  return await User.updateOne({ _id: id }, { token })
+  try {
+    return await User.updateOne({ _id: id }, { token })
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const updateUserSubscription = async (userId, body) => {
+  try {
+      const updatedStatus = await User.findByIdAndUpdate(
+      userId,
+      { ...body },
+      { new: true }
+    )
+    return updatedStatus
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 module.exports = {
@@ -22,4 +51,5 @@ module.exports = {
   findByEmail,
   createUser,
   updateToken,
+  updateUserSubscription
 }

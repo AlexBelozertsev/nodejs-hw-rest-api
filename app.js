@@ -1,7 +1,10 @@
 const express = require('express')
 const logger = require('morgan')
 const cors = require('cors')
-const { HttpCode } = require('./helpers/constants')
+const rateLimit = require('express-rate-limit')
+const helmet = require('helmet')
+const boolParser = require('express-query-boolean')
+const { HttpCode, limits, limiterAPI } = require('./helpers/constants')
 const contactsRouter = require('./routes/api/contacts')
 const usersRouter = require('./routes/api/users')
 
@@ -9,10 +12,13 @@ const app = express()
 
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short'
 
+app.use(helmet())
 app.use(logger(formatsLogger))
 app.use(cors())
-app.use(express.json())
+app.use(express.json({ limit: limits.LIMIT_JSON }))
+app.use(boolParser())
 
+app.use('/api/', rateLimit(limiterAPI))
 app.use('/api/users', usersRouter)
 app.use('/api/contacts', contactsRouter)
 
@@ -33,6 +39,10 @@ app.use((err, req, res, next) => {
     message: err.message,
     data: err.status === HttpCode.INTERNAL_SERVER_ERROR ? 'Internal Server Error' : err.data
   })
+})
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.log('Unhandled Rejection at:', promise, 'reason:', reason)
 })
 
 module.exports = app
