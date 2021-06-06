@@ -1,5 +1,5 @@
 const Users = require('../repositories/users')
-const { HttpCode } = require('../helpers/constants')
+const { HttpCode, messages } = require('../helpers/constants')
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 const SECRET_KEY = process.env.SECRET_KEY
@@ -13,7 +13,7 @@ const register = async (req, res, next) => {
         .json({
           status: 'error',
           code: HttpCode.CONFLICT,
-          message: 'Email in use',
+          message: messages.CONFLICT,
       })
     }
     const { id, email, subscription } = await Users.createUser(req.body)
@@ -38,7 +38,7 @@ const login = async (req, res, next) => {
         .json({
         status: 'error',
         code: HttpCode.UNAUTHORIZED,
-        message: 'Email or password is wrong',
+        message: messages.UNAUTHORIZED,
       })
     }
     const id = user.id
@@ -98,7 +98,7 @@ const update = async (req, res, next) => {
         .json({
           status: 'error',
           code: HttpCode.NOT_FOUND,
-          message: 'error: User Not Found',
+          message: messages.NOT_FOUND,
           data: 'Not Found'
         })
     } else {
@@ -107,7 +107,7 @@ const update = async (req, res, next) => {
         .json({
           status: 'error',
           code: HttpCode.BAD_REQUEST,
-          message: 'error: missing field',
+          message: messages.BAD_REQUEST,
           data: 'missing field'
       })
     }

@@ -21,7 +21,7 @@ This app is a tutorial project for creating and working with a user contacts dat
 
 3. Using
 
-- To start working with his collection of contacts, the user needs to register. To do this, you need to go to the next router `POST`: `http://localhost:3000/api/users/signup` And create your account by filling in the required fields `e-mail` and `password`(min 6 symbols) in the body. You can also specify Username and subscription option for example:
+- To start working with his collection of contacts, the user needs to register. To do this, you need to go to the next router `POST`: `http://localhost:3000/api/users/signup` And create your account by filling in the required fields `e-mail` and `password`(min 6 symbols) in the body. You can also specify `name` and `subscription` option for example:
 
   `{ "name": "NewUser", "email": "newUser@gmail.com", "password": "123456789", "subscription": "starter" }`
 
@@ -69,7 +69,7 @@ Pay attention to the token in the response. On subsequent requests to the server
   ```
 
 - To change the subscription status of the current user, you need to go to the following route (a token is required):
-  `PATCH`:`http://localhost:3000/api/users/current` nd change the subscription status by specifying one of the options in the body: `['starter', 'pro', 'business']`. The request body might look like this:
+  `PATCH`:`http://localhost:3000/api/users` nd change the subscription status by specifying one of the options in the body: `['starter', 'pro', 'business']`. The request body might look like this:
   `{ "subscription": "pro" }`
   If the request is entered correctly, the response may look like this:
 

@@ -1,4 +1,4 @@
-const { HttpCode } = require('../helpers/constants')
+const { HttpCode, messages } = require('../helpers/constants')
 const Contacts = require('../repositories/contacts')
 
 const getAllContacts = async (req, res, next) => {
@@ -27,7 +27,7 @@ const getContactById = async (req, res, next) => {
         .json({
           status: 'error',
           code: HttpCode.NOT_FOUND,
-          message: 'error: Contact Not Found',
+          message: messages.NOT_FOUND,
           data: 'Not Found'
         })
     }
@@ -50,7 +50,7 @@ const addContact = async (req, res, next) => {
         .json({
           status: 'error',
           code: HttpCode.BAD_REQUEST,
-          message: 'error: missing required name field',
+          message: messages.BAD_REQUEST,
           data: 'missing required name field'
       })
     }
@@ -69,7 +69,7 @@ const removeContact = async (req, res, next) => {
         .json({
           status: 'success',
           code: HttpCode.OK,
-          message: 'contact deleted',
+          message: messages.REMOVE,
           data: { contact }
       })
     } else {
@@ -78,7 +78,7 @@ const removeContact = async (req, res, next) => {
         .json({
           status: 'error',
           code: HttpCode.NOT_FOUND,
-          message: 'error: Contact Not Found',
+          message: messages.NOT_FOUND,
           data: 'Not Found'
         })
     }
@@ -102,7 +102,7 @@ const updateContact = async (req, res, next) => {
         .json({
           status: 'error',
           code: HttpCode.NOT_FOUND,
-          message: 'error: Contact Not Found',
+          message: messages.NOT_FOUND,
           data: 'Not Found'
         })
     } else {
@@ -111,7 +111,7 @@ const updateContact = async (req, res, next) => {
         .json({
           status: 'error',
           code: HttpCode.BAD_REQUEST,
-          message: 'error: missing fields',
+          message: messages.BAD_REQUEST,
           data: 'missing fields'
       })
     }

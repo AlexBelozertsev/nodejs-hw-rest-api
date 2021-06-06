@@ -12,6 +12,6 @@ router.post('/signup', validationRegistrationUser, control.register)
 router.post('/login', validationUserLogin, control.login)
 router.post('/logout', guard, control.logout)
 router.get('/current', guard, control.current)
-router.patch('/current', guard, validationUserSubscription, control.update)
+router.patch('/', guard, validationUserSubscription, control.update)
 
 module.exports = router
