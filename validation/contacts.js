@@ -1,18 +1,18 @@
 const Joi = require('joi')
-const { HttpCode } = require('../helpers/constants')
+const { HttpCode, messages } = require('../helpers/constants')
 const mongoose = require('mongoose')
 
 const schemaCreateContact = Joi.object({
   name: Joi.string().alphanum().min(2).max(30).required(),
   email: Joi.string()
-    .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).optional(),
+    .email({ minDomainSegments: 2 }).optional(),
   phone: Joi.string().min(7).max(17).optional(),
 })
 
 const schemaUpdateContact = Joi.object({
   name: Joi.string().alphanum().min(2).max(30).optional(),
   email: Joi.string()
-    .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).optional(),
+    .email({ minDomainSegments: 2 }).optional(),
   phone: Joi.string().min(7).max(17).optional(),
 }).or('name', 'email', 'phone')
 
@@ -48,7 +48,7 @@ module.exports = {
     if (!mongoose.isValidObjectId(req.params.id)) {
       return next({
       status: HttpCode.BAD_REQUEST,
-      message: `Invalid ObjectId`,
+      message: messages.INVALID_OBJ_ID,
       data: 'Bad Request'
       })
     }

@@ -33,11 +33,12 @@ const limiterAPI = {
 }
 
 const messages = {
-  TOO_MANY_REQUESTS: 'User has sent too many requests recently',
-  NOT_FOUND: 'error: Contact Not Found',
   BAD_REQUEST: 'error: missing fields',
   CONFLICT: 'Email in use',
+  INVALID_OBJ_ID: 'Invalid ObjectId',
+  NOT_FOUND: 'error: Contact Not Found',
   REMOVE: 'contact deleted',
+  TOO_MANY_REQUESTS: 'User has sent too many requests recently',
   UNAUTHORIZED: 'Email or password is wrong',
 }
 

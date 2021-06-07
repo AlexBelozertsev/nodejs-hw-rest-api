@@ -14,7 +14,7 @@ const userSchema = new Schema({
       required: [true, 'Email is required'],
       unique: true,
       validate(value) {
-        const re = /\S+@\S+\.\S+/g
+        const re = /.+@.+\..+/i
         return re.test(String(value).toLowerCase())
       }
     },
@@ -43,6 +43,11 @@ userSchema.pre('save', async function (next) {
     this.password = await bcrypt.hash(this.password, salt)
   }
   next()
+})
+
+userSchema.path('password').validate(function (value) {
+  const regExp = /^[a-zA-Z0-9]{6,25}$/
+  return regExp.test(String(value))
 })
 
 userSchema.methods.isValidPassword = async function (password) {

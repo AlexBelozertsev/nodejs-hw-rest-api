@@ -2,21 +2,21 @@ const Joi = require('joi')
 const { HttpCode, Subscription } = require('../helpers/constants')
 
 const schemaUserRegistration = Joi.object({
-    name: Joi.string().alphanum().min(2).max(30).optional(),
-    email: Joi.string()
-        .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'ua'] } }).required(),
+  name: Joi.string().alphanum().min(2).max(30).optional(),
+  email: Joi.string().email({ minDomainSegments: 2 }).required(),
   password: Joi.string().alphanum().min(6).max(25).required(),
-    subscription: Joi.any().valid('starter', 'pro', 'business').optional(),
+  subscription: Joi.any()
+    .valid(Subscription.STARTER, Subscription.PRO, Subscription.BUSINESS).optional(),
 })
 
 const schemaUserLogin = Joi.object({
-    email: Joi.string()
-        .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'ua'] } }).required(),
-    password: Joi.string().alphanum().min(6).max(25).required(),
+  email: Joi.string().email({ minDomainSegments: 2 }).required(),
+  password: Joi.string().alphanum().min(6).max(25).required(),
 })
 
 const schemaUpdateUserSubscription = Joi.object({
-  subscription: Joi.any().valid(Subscription.STARTER, Subscription.PRO, Subscription.BUSINESS).required(),
+  subscription: Joi.any()
+    .valid(Subscription.STARTER, Subscription.PRO, Subscription.BUSINESS).required(),
 })
 
 const validate = async (schema, obj, next) => {
