@@ -27,7 +27,8 @@ This app is a tutorial project for creating and working with a user contacts dat
 
   If the request is entered correctly, the response may look like this:
 
-  ```{
+  ```
+  {
     "status": "success",
     "code": 201,
     "data": {
@@ -42,7 +43,8 @@ This app is a tutorial project for creating and working with a user contacts dat
   `POST`: `http://localhost:3000/api/users/login` and specify the required fields `e-mail` and your `password` in the request body for example: `{ "email": "newUser@gmail.com", "password": "123456789" }`
   If the request is entered correctly, the response may look like this:
 
-  ```{
+  ```
+  {
       "status": "success",
       "code": 200,
       "data": {
@@ -58,7 +60,8 @@ Pay attention to the token in the response. On subsequent requests to the server
 - To view the data of the current user, you need to go to the following route (a token is required):
   `GET`: `http://localhost:3000/api/users/current` If the request is entered correctly, the response may look like this:
 
-  ```{
+  ```
+  {
     "status": "success",
     "code": 200,
     "data": {
@@ -95,7 +98,8 @@ Pay attention to the token in the response. On subsequent requests to the server
   `{ "name": "Contact Name", "email": "contact@gmail.com", "phone": "+38(0--)123-45-67" }`
   If the request is entered correctly, the response may look like this:
 
-  ```{
+  ```
+  {
     "status": "success",
     "code": 201,
     "data": {
@@ -116,7 +120,8 @@ Pay attention to the token in the response. On subsequent requests to the server
   `http://localhost:3000/api/contacts`
   If the request is entered correctly, the response may look like this:
 
-  ```{
+  ```
+  {
     "status": "success",
     "code": 200,
     "data": {
@@ -128,6 +133,7 @@ Pay attention to the token in the response. On subsequent requests to the server
                 "email": "nulla.ante@vestibul.co.uk",
                 "phone": "(992) 914-3792"
             },
+            ...
             {
                 "favorite": true,
                 "_id": "60b201e07cd92b1c88fa3f62",
@@ -145,7 +151,8 @@ Pay attention to the token in the response. On subsequent requests to the server
   `http://localhost:3000/api/contacts/<contact ID>`
   If the request is entered correctly, the response may look like this:
 
-```{
+```
+{
   "status": "success",
   "code": 200,
   "data": {
@@ -167,7 +174,8 @@ Pay attention to the token in the response. On subsequent requests to the server
   or `{ "phone": "+38(0--)123-45-67" }` ets.
   If the request is entered correctly, the response may look like this:
 
-  ```{
+  ```
+  {
     "status": "success",
     "code": 200,
     "data": {
@@ -190,7 +198,8 @@ Pay attention to the token in the response. On subsequent requests to the server
   `{ "favorite": true }`
   If the request is entered correctly, the response may look like this:
 
-  ```{
+  ```
+  {
     "status": "success",
     "code": 200,
     "data": {
@@ -211,7 +220,8 @@ Pay attention to the token in the response. On subsequent requests to the server
   `http://localhost:3000/api/contacts/<contact ID>`
   If the request is entered correctly, the response may look like this:
 
-  ```{
+  ```
+  {
     "status": "success",
     "code": 200,
     "message": "contact deleted",
