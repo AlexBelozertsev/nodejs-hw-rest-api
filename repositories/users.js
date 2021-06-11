@@ -33,9 +33,9 @@ const updateToken = async (id, token) => {
   }
 }
 
-const updateAvatar = async (id, avatar) => {
+const updateAvatar = async (id, avatar, idCloudAvatar = null) => {
   try {
-    return await User.updateOne({ _id: id }, { avatarURL: avatar })
+    return await User.updateOne({ _id: id }, { avatarURL: avatar, idCloudAvatar })
   } catch (error) {
     console.log(error)
   }

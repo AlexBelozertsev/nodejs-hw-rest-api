@@ -38,6 +38,10 @@ const userSchema = new Schema({
         return gravatar.url(this.email, { s: limits.LIMIT_AVATAR_SIZE }, true)
       }
     },
+    idCloudAvatar: {
+      type: String,
+      default: null,
+    },
 }, {
     versionKey: false,
     timestamps: true,

@@ -2,10 +2,15 @@ const Users = require('../repositories/users')
 const { HttpCode, messages } = require('../helpers/constants')
 const jwt = require('jsonwebtoken')
 const fs = require('fs/promises')
-const path = require('path')
-const UploadAvatarService = require('../services/localUpload')
 require('dotenv').config()
 const SECRET_KEY = process.env.SECRET_KEY
+
+// Local upload method
+// const path = require('path')
+// const UploadAvatarService = require('../services/localUpload')
+
+// Cloud upload method
+const UploadAvatarService = require('../services/cloudUpload')
 
 const register = async (req, res, next) => {
   try {
@@ -119,18 +124,35 @@ const update = async (req, res, next) => {
   }
 }
 
+// Local upload method
+// const avatars = async (req, res, next) => {
+//   try {
+//     const userId = req.user.id
+//     const avatarsFolder = path.join(process.env.PUBLIC_FOLDER, process.env.USERS_AVATARS)
+//     const uploads = new UploadAvatarService(avatarsFolder)
+//     const avatarUrl = await uploads.saveAvatar({ idUser: userId, file: req.file })
+//     try {
+//       await fs.unlink(path.join(avatarsFolder, req.user.avatar))
+//     } catch (error) {
+//       console.log(error.message)
+//     }
+//     await Users.updateAvatar(userId, avatarUrl)
+//     return res
+//       .status(HttpCode.OK)
+//       .json({ status: 'success', code: HttpCode.OK, data: { avatarUrl } })
+//   } catch (error) {
+//     next(error)
+//   }
+// }
+
+// Cloud upload method
 const avatars = async (req, res, next) => {
   try {
     const userId = req.user.id
-    const avatarsFolder = path.join(process.env.PUBLIC_FOLDER, process.env.USERS_AVATARS)
-    const uploads = new UploadAvatarService(avatarsFolder)
-    const avatarUrl = await uploads.saveAvatar({ idUser: userId, file: req.file })
-    try {
-      await fs.unlink(path.join(avatarsFolder, req.user.avatar))
-    } catch (error) {
-      console.log(error.message)
-    }
-    await Users.updateAvatar(userId, avatarUrl)
+    const uploads = new UploadAvatarService()
+    const { idCloudAvatar, avatarUrl } = await uploads.saveAvatar(req.file.path, req.user.idCloudAvatar)
+    await fs.unlink(req.file.path)
+    await Users.updateAvatar(userId, avatarUrl, idCloudAvatar)
     return res
       .status(HttpCode.OK)
       .json({ status: 'success', code: HttpCode.OK, data: { avatarUrl } })
