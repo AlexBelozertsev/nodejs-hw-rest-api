@@ -1,6 +1,9 @@
 const Users = require('../repositories/users')
 const { HttpCode, messages } = require('../helpers/constants')
 const jwt = require('jsonwebtoken')
+const fs = require('fs/promises')
+const path = require('path')
+const UploadAvatarService = require('../services/localUpload')
 require('dotenv').config()
 const SECRET_KEY = process.env.SECRET_KEY
 
@@ -16,11 +19,11 @@ const register = async (req, res, next) => {
           message: messages.CONFLICT,
       })
     }
-    const { id, email, subscription } = await Users.createUser(req.body)
+    const { id, email, subscription, avatarURL } = await Users.createUser(req.body)
     return res.status(HttpCode.CREATED).json({
       status: 'success',
       code: HttpCode.CREATED,
-      data: { id, email, subscription },
+      data: { id, email, subscription, avatarURL },
     })
   } catch (err) {
     next(err)
@@ -69,13 +72,13 @@ const logout = async (req, res, next) => {
 
 const current = async (req, res, next) => {
   try {
-    const {email, subscription} = req.user
+    const {email, subscription, avatarURL} = req.user
     return res
       .status(HttpCode.OK)
       .json({
         status: 'success',
         code: HttpCode.OK,
-        data: { email, subscription }
+        data: { email, subscription, avatarURL }
     })
   } catch (error) {
     next(error)
@@ -116,4 +119,24 @@ const update = async (req, res, next) => {
   }
 }
 
-module.exports = { register, login, logout, current, update }
+const avatars = async (req, res, next) => {
+  try {
+    const userId = req.user.id
+    const avatarsFolder = path.join(process.env.PUBLIC_FOLDER, process.env.USERS_AVATARS)
+    const uploads = new UploadAvatarService(avatarsFolder)
+    const avatarUrl = await uploads.saveAvatar({ idUser: userId, file: req.file })
+    try {
+      await fs.unlink(path.join(avatarsFolder, req.user.avatar))
+    } catch (error) {
+      console.log(error.message)
+    }
+    await Users.updateAvatar(userId, avatarUrl)
+    return res
+      .status(HttpCode.OK)
+      .json({ status: 'success', code: HttpCode.OK, data: { avatarUrl } })
+  } catch (error) {
+    next(error)
+  }
+}
+
+module.exports = { register, login, logout, current, update, avatars }
