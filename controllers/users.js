@@ -5,22 +5,15 @@ const fs = require('fs/promises')
 require('dotenv').config()
 const SECRET_KEY = process.env.SECRET_KEY
 
-// Local upload method
-// const path = require('path')
-// const UploadAvatarService = require('../services/localUpload')
-
-// Cloud upload method
-const UploadAvatarService = require('../services/cloudUpload')
-
 const register = async (req, res, next) => {
   try {
     const user = await Users.findByEmail(req.body.email)
     if (user) {
       return res
-        .status(HttpCode.CONFLICT)
-        .json({
-          status: 'error',
-          code: HttpCode.CONFLICT,
+      .status(HttpCode.CONFLICT)
+      .json({
+        status: 'error',
+        code: HttpCode.CONFLICT,
           message: messages.CONFLICT,
       })
     }
@@ -42,9 +35,9 @@ const login = async (req, res, next) => {
     const isValidPassword = await user?.isValidPassword(req.body.password)
     if (!user || !isValidPassword) {
       return res
-        .status(HttpCode.UNAUTHORIZED)
+      .status(HttpCode.UNAUTHORIZED)
         .json({
-        status: 'error',
+          status: 'error',
         code: HttpCode.UNAUTHORIZED,
         message: messages.UNAUTHORIZED,
       })
@@ -54,8 +47,8 @@ const login = async (req, res, next) => {
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1d' })
     await Users.updateToken(id, token)
     return res
-      .status(HttpCode.OK)
-      .json({
+    .status(HttpCode.OK)
+    .json({
         status: 'success',
         code: HttpCode.OK,
         data: { token, email, subscription }
@@ -84,7 +77,7 @@ const current = async (req, res, next) => {
         status: 'success',
         code: HttpCode.OK,
         data: { email, subscription, avatarURL }
-    })
+      })
   } catch (error) {
     next(error)
   }
@@ -95,14 +88,14 @@ const update = async (req, res, next) => {
     const userId = req.user.id
     if (req.body) {
       const user = await Users.updateUserSubscription(userId, req.body)
-    const {name, email, subscription} = user
+      const {name, email, subscription} = user
       if (user) {
         return res
-          .status(HttpCode.OK)
+        .status(HttpCode.OK)
           .json({ status: 'success', code: HttpCode.OK, data: { name, email, subscription } })
-      }
+        }
       return res
-        .status(HttpCode.NOT_FOUND)
+      .status(HttpCode.NOT_FOUND)
         .json({
           status: 'error',
           code: HttpCode.NOT_FOUND,
@@ -125,6 +118,8 @@ const update = async (req, res, next) => {
 }
 
 // Local upload method
+// const path = require('path')
+// const UploadAvatarService = require('../services/localUpload')
 // const avatars = async (req, res, next) => {
 //   try {
 //     const userId = req.user.id
@@ -145,7 +140,9 @@ const update = async (req, res, next) => {
 //   }
 // }
 
+
 // Cloud upload method
+const UploadAvatarService = require('../services/cloudUpload')
 const avatars = async (req, res, next) => {
   try {
     const userId = req.user.id
