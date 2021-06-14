@@ -41,10 +41,10 @@ const updateAvatar = async (id, avatar, idCloudAvatar = null) => {
   }
 }
 
-const updateUserSubscription = async (userId, body) => {
+const updateUserSubscription = async (id, body) => {
   try {
       const updatedStatus = await User.findByIdAndUpdate(
-      userId,
+      id,
       { ...body },
       { new: true }
     )

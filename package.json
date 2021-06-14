@@ -1,13 +1,15 @@
 {
   "name": "rest-api",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "main": "./bin/server.js",
   "private": true,
   "scripts": {
     "start": "cross-env NODE_ENV=production node ./bin/server.js",
     "start:dev": "cross-env NODE_ENV=development nodemon ./bin/server.js",
     "lint": "eslint **/*.js",
-    "lint:fix": "eslint --fix **/*.js"
+    "lint:fix": "eslint --fix **/*.js",
+    "test": "cross-env NODE_ENV=test jest --no-cache --verbose --detectOpenHandles",
+    "test:coverage": "cross-env NODE_ENV=test jest --coverage"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -28,8 +30,7 @@
     "morgan": "1.10.0",
     "multer": "^1.4.2",
     "passport": "^0.4.1",
-    "passport-jwt": "^4.0.0",
-    "shortid": "^2.2.16"
+    "passport-jwt": "^4.0.0"
   },
   "devDependencies": {
     "eslint": "^7.19.0",
