@@ -50,7 +50,7 @@ This app is a tutorial project for creating and working with users and their con
   `PATCH`: `http://localhost:3000/api/users/avatars`
   As shown in the illustration, in the request body, select the "form factor" radio button and specify the
   `key = avatar` and `value = your photo`
-  ![alt text](http://joxi.ru/a2XBWJ7ily7wpr)
+  http://joxi.ru/a2XBWJ7ily7wpr
   Attention: the size of the avatar will be transformed into a square with a side of 250p
   If the request is entered correctly, the response may look like this:
 
