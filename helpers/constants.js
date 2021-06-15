@@ -12,24 +12,14 @@ const HttpCode = {
 }
 
 const limits = {
+  LIMIT_AVATAR_SIZE: 250,
+  LIMIT_FILE_SIZE: 2 * 1024 * 1024,
   LIMIT_CONTACTS: 20,
-  LIMIT_JSON: 10000,
+  LIMIT_JSON: 10 * 1024,
   LIMIT_TIME: 15 * 60 * 1000,
-  LIMIT_REQUEST: 100
-}
-
-const limiterAPI = {
-  windowMs: limits.LIMIT_TIME,
-  max: limits.LIMIT_REQUEST,
-  handler: (req, res, next) => {
-    return res
-      .status(HttpCode.TOO_MANY_REQUESTS)
-      .json({
-        status: 'error',
-        code: HttpCode.TOO_MANY_REQUESTS,
-        message: messages.TOO_MANY_REQUESTS,
-    })
-  },
+  LIMIT_REQUEST: 100,
+  LIMIT_CREATE_ACC_TIME: 60 * 60 * 1000,
+  LIMIT_CREATE_REQUEST: 2,
 }
 
 const messages = {
@@ -40,6 +30,7 @@ const messages = {
   REMOVE: 'contact deleted',
   TOO_MANY_REQUESTS: 'User has sent too many requests recently',
   UNAUTHORIZED: 'Email or password is wrong',
+  WRONG_FORMAT: 'Use for avatar image file',
 }
 
 const Subscription = {
@@ -48,4 +39,4 @@ const Subscription = {
   BUSINESS: 'business',
 }
 
-module.exports = { HttpCode, Subscription, limits, limiterAPI, messages }
+module.exports = { HttpCode, Subscription, limits, messages }

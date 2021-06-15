@@ -33,10 +33,18 @@ const updateToken = async (id, token) => {
   }
 }
 
-const updateUserSubscription = async (userId, body) => {
+const updateAvatar = async (id, avatar, idCloudAvatar = null) => {
+  try {
+    return await User.updateOne({ _id: id }, { avatarURL: avatar, idCloudAvatar })
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const updateUserSubscription = async (id, body) => {
   try {
       const updatedStatus = await User.findByIdAndUpdate(
-      userId,
+      id,
       { ...body },
       { new: true }
     )
@@ -51,5 +59,6 @@ module.exports = {
   findByEmail,
   createUser,
   updateToken,
+  updateAvatar,
   updateUserSubscription
 }

@@ -4,7 +4,11 @@ const cors = require('cors')
 const rateLimit = require('express-rate-limit')
 const helmet = require('helmet')
 const boolParser = require('express-query-boolean')
-const { HttpCode, limits, limiterAPI } = require('./helpers/constants')
+const path = require('path')
+require('dotenv').config()
+const PUBLIC_FOLDER = process.env.PUBLIC_FOLDER
+const { HttpCode, limits } = require('./helpers/constants')
+const {limiterAPI} = require('./helpers/rateLimit')
 const contactsRouter = require('./routes/api/contacts')
 const usersRouter = require('./routes/api/users')
 
@@ -13,7 +17,8 @@ const app = express()
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short'
 
 app.use(helmet())
-app.use(logger(formatsLogger))
+app.use(express.static(path.join(__dirname, PUBLIC_FOLDER)))
+app.get('env') !== 'test' && app.use(logger(formatsLogger))
 app.use(cors())
 app.use(express.json({ limit: limits.LIMIT_JSON }))
 app.use(boolParser())
