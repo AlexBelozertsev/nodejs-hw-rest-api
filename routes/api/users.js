@@ -17,6 +17,7 @@ router.get('/current', guard, control.current)
 router.patch('/', guard, validationUserSubscription, control.update)
 router.patch('/avatars', guard, upload.single('avatar'), control.avatars)
 
-// router.get('/verify/:verificationToken', guard, control.current)
+router.get('/verify/:verificationToken', control.verify)
+router.post('/verify', control.repeatEmailVerification)
 
 module.exports = router

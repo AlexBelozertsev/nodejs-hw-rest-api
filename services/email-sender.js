@@ -5,7 +5,7 @@ require('dotenv').config()
 class CreateSenderSendGrid {
   async send(msg) {
     sgMail.setApiKey(process.env.SENDGRID_API_KEY)
-    return await sgMail.send({ ...msg, from: 'Alex Belozertsev <kashim983@gmail.com>' })
+    return await sgMail.send({ ...msg, from: 'Alex Belozertsev <alex983@meta.ua>' })
   }
 }
 

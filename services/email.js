@@ -6,7 +6,7 @@ class EmailService {
     this.sender = sender
     switch (env) {
       case 'development':
-        this.link = process.env.DEV_LINK
+        this.link = 'http://localhost:3000'
         break
       case 'production':
         this.link = 'link for production'
@@ -20,7 +20,7 @@ class EmailService {
     const mailGenerator = new Mailgen({
       theme: 'salted',
       product: {
-        name: 'Alex Belozertsev',
+        name: 'Alex test',
         link: this.link,
       },
     })
@@ -48,9 +48,8 @@ class EmailService {
       subject: 'Verify your account',
       html: emailHtml,
     }
-    console.log('Presend')
     const result = await this.sender.send(msg)
-    console.log(result)
+    console.log('result', result)
   }
 }
 

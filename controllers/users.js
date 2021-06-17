@@ -19,7 +19,7 @@ const register = async (req, res, next) => {
           message: messages.CONFLICT,
       })
     }
-    const { id, email, subscription, avatarURL, verifyToken } = await Users.createUser(req.body)
+    const { id, name, email, subscription, avatarURL, verifyToken } = await Users.createUser(req.body)
 
     try {
       const emailService = new EmailService(
@@ -171,4 +171,58 @@ const avatars = async (req, res, next) => {
   }
 }
 
-module.exports = { register, login, logout, current, update, avatars }
+const verify = async (req, res, next) => {
+  try {
+    const user = await Users.findByVerifyToken(req.params.token)
+    if (user) {
+      await Users.updateTokenVerify(user.id, true, null)
+      return res
+        .status(HttpCode.OK)
+        .json({ status: 'success', code: HttpCode.OK, message: messages.OK })
+    }
+    return res
+      .status(HttpCode.BAD_REQUEST)
+      .json({
+        status: 'error',
+        code: HttpCode.BAD_REQUEST,
+        message: messages.INVALID_TOKEN,
+      })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const repeatEmailVerification = async (req, res, next) => {
+  try {
+    const user = await Users.findByEmail(req.body.email)
+    if (user) {
+      const { name, email, verify, verifyToken } = user
+      if (!verify) {
+        const emailService = new EmailService(
+          process.env.NODE_ENV,
+          new CreateSenderSendGrid(),
+        )
+        await emailService.sendVerifyEmail(verifyToken, email, name)
+        return res
+          .status(HttpCode.OK)
+          .json({ status: 'success', code: HttpCode.OK, message: messages.RESUBMIT_OK })
+      }
+      return res
+        .status(HttpCode.CONFLICT)
+        .json({
+          status: 'error',
+          code: HttpCode.CONFLICT,
+          message: messages.CONFLICT_VERIFY,
+        })
+      }
+    return res.status(HttpCode.NOT_FOUND).json({
+      status: 'error',
+      code: HttpCode.NOT_FOUND,
+      message: 'User not found',
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+module.exports = { register, login, logout, current, update, avatars, verify, repeatEmailVerification }

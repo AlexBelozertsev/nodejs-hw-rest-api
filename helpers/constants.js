@@ -23,11 +23,15 @@ const limits = {
 }
 
 const messages = {
+  OK: 'Success',
   BAD_REQUEST: 'error: missing fields',
   CONFLICT: 'Email in use',
+  CONFLICT_VERIFY: 'Email has been verified',
   INVALID_OBJ_ID: 'Invalid ObjectId',
+  INVALID_TOKEN: 'Verification token is not valid',
   NOT_FOUND: 'error: Contact Not Found',
   REMOVE: 'contact deleted',
+  RESUBMIT_OK: 'Resubmitted success!',
   TOO_MANY_REQUESTS: 'User has sent too many requests recently',
   UNAUTHORIZED: 'Email or password is wrong',
   WRONG_FORMAT: 'Use for avatar image file',
