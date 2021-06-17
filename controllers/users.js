@@ -2,6 +2,8 @@ const Users = require('../repositories/users')
 const { HttpCode, messages } = require('../helpers/constants')
 const jwt = require('jsonwebtoken')
 const fs = require('fs/promises')
+const EmailService = require('../services/email')
+const {CreateSenderSendGrid, CreateSenderNodemailer} = require('../services/email-sender')
 require('dotenv').config()
 const SECRET_KEY = process.env.SECRET_KEY
 
@@ -17,11 +19,22 @@ const register = async (req, res, next) => {
           message: messages.CONFLICT,
       })
     }
-    const { id, email, subscription, avatarURL } = await Users.createUser(req.body)
+    const { id, email, subscription, avatarURL, verifyToken } = await Users.createUser(req.body)
+
+    try {
+      const emailService = new EmailService(
+        process.env.NODE_ENV,
+        new CreateSenderSendGrid(),
+      )
+      await emailService.sendVerifyEmail(verifyToken, email, name)
+    } catch (error) {
+      console.log(error.message)
+    }
+
     return res.status(HttpCode.CREATED).json({
       status: 'success',
       code: HttpCode.CREATED,
-      data: { id, email, subscription, avatarURL },
+      data: { id, name, email, subscription, avatarURL },
     })
   } catch (err) {
     next(err)
@@ -33,7 +46,7 @@ const login = async (req, res, next) => {
     const user = await Users.findByEmail(req.body.email)
     const {email, subscription} = user
     const isValidPassword = await user?.isValidPassword(req.body.password)
-    if (!user || !isValidPassword) {
+    if (!user || !isValidPassword || !user.verify) {
       return res
       .status(HttpCode.UNAUTHORIZED)
         .json({

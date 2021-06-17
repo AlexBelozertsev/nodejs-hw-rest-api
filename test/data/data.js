@@ -7,14 +7,14 @@ const newContact = {
 const newUser = {
     name: 'Alex',
     email: 'alex_cat@ex.ua',
-    password: '123456',
+    password: '1234567',
     subscription: 'starter'
 };
 
 const newTestUser = {
     name: 'Thomas',
-    email: 'newalexxuser@gmail.com',
-    password: '123456',
+    email: 'newalexr@gmail.com',
+    password: '1234567',
     subscription: 'starter'
 };
 
