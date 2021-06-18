@@ -9,6 +9,7 @@ class CreateSenderSendGrid {
   }
 }
 
+// alternative sendler
 class CreateSenderNodemailer {
   async send(msg) {
     const config = {

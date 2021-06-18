@@ -6,13 +6,13 @@ class EmailService {
     this.sender = sender
     switch (env) {
       case 'development':
-        this.link = 'http://localhost:3000'
+        this.link = process.env.DEV_LINK
         break
       case 'production':
         this.link = 'link for production'
         break
       default:
-        this.link = process.env.TEMP_LINK
+        this.link = process.env.NGROK_LINK
         break
     }
   }
@@ -20,7 +20,7 @@ class EmailService {
     const mailGenerator = new Mailgen({
       theme: 'salted',
       product: {
-        name: 'Alex test',
+        name: 'Test of sending email system',
         link: this.link,
       },
     })
@@ -30,7 +30,7 @@ class EmailService {
         intro:
           "Welcome to testing send system! We're very excited to have you on board.",
         action: {
-          instructions: 'To get started working in testing the system of sending, please click here:',
+          instructions: 'To get start to testing of sending email system, please click here:',
           button: {
             color: '#22BC66',
             text: 'Confirm your account',
