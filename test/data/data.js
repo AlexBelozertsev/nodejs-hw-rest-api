@@ -15,7 +15,7 @@ const newTestUser = {
     name: 'Thomas',
     email: 'newalexr@gmail.com',
     password: '1234567',
-    subscription: 'starter'
+    subscription: 'starter',
 };
 
 module.exports = { newContact, newUser, newTestUser }

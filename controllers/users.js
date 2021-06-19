@@ -1,11 +1,12 @@
-const Users = require('../repositories/users')
-const { HttpCode, messages } = require('../helpers/constants')
 const jwt = require('jsonwebtoken')
 const fs = require('fs/promises')
-const EmailService = require('../services/email')
-const {CreateSenderSendGrid, CreateSenderNodemailer} = require('../services/email-sender')
 require('dotenv').config()
 const SECRET_KEY = process.env.SECRET_KEY
+const Users = require('../repositories/users')
+const { HttpCode, messages } = require('../helpers/constants')
+const ErrorHandler = require('../helpers/errorHandler')
+const EmailService = require('../services/email')
+const {CreateSenderSendGrid, CreateSenderNodemailer} = require('../services/email-sender')
 
 const register = async (req, res, next) => {
   try {
@@ -28,7 +29,7 @@ const register = async (req, res, next) => {
       )
       await emailService.sendVerifyEmail(verifyToken, email, name)
     } catch (error) {
-      console.log(error.message)
+      throw new ErrorHandler(HttpCode.SERVICE_UNAVAILABLE, error.message, messages.SERVICE_UNAVAILABLE)
     }
 
     return res
@@ -46,9 +47,9 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const user = await Users.findByEmail(req.body.email)
-    const {email, subscription} = user
+    const {email, subscription, verify} = user
     const isValidPassword = await user?.isValidPassword(req.body.password)
-    if (!user || !isValidPassword || !user.verify) {
+    if (!user || !isValidPassword || !verify) {
       return res
         .status(HttpCode.UNAUTHORIZED)
         .json({
@@ -185,11 +186,11 @@ const verify = async (req, res, next) => {
         .json({ status: 'success', code: HttpCode.OK, message: messages.OK })
     }
     return res
-      .status(HttpCode.NOT_FOUND)
+      .status(HttpCode.BAD_REQUEST)
       .json({
         status: 'error',
-        code: HttpCode.NOT_FOUND,
-        message: messages.NOT_FOUND_USER,
+        code: HttpCode.BAD_REQUEST,
+        message: messages.BAD_REQUEST_USER,
       })
   } catch (error) {
     next(error)

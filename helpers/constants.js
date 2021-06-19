@@ -8,7 +8,8 @@ const HttpCode = {
   NOT_FOUND: 404,
   CONFLICT: 409,
   TOO_MANY_REQUESTS: 429,
-  INTERNAL_SERVER_ERROR: 500
+  INTERNAL_SERVER_ERROR: 500,
+  SERVICE_UNAVAILABLE: 503,
 }
 
 const limits = {
@@ -32,6 +33,7 @@ const messages = {
   NOT_FOUND: 'error: Contact Not Found',
   REMOVE: 'contact deleted',
   RESUBMIT_OK: 'Verification email sent',
+  SERVICE_UNAVAILABLE: 'Service Unavailable',
   TOO_MANY_REQUESTS: 'User has sent too many requests recently',
   UNAUTHORIZED: 'Email or password is wrong',
   WRONG_FORMAT: 'Use for avatar image file',
