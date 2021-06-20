@@ -42,13 +42,11 @@ describe('Test route users', () => {
     
     test('Login User', async () => {
       const { email, password } = newTestUser
-      newTestUser.verify = true
-      console.log(newTestUser);
+      await User.findOneAndUpdate({ email: email }, {verify: true}, {new: true})
       const response = await request(app)
         .post('/api/users/login')
         .send({email, password})
         .set('Accept', 'application/json')
-      console.log('response.body', response.body);
       expect(response.status).toEqual(HttpCode.OK)
       expect(response.body).toBeDefined()
       token = response.body.data.token
