@@ -8,7 +8,8 @@ const HttpCode = {
   NOT_FOUND: 404,
   CONFLICT: 409,
   TOO_MANY_REQUESTS: 429,
-  INTERNAL_SERVER_ERROR: 500
+  INTERNAL_SERVER_ERROR: 500,
+  SERVICE_UNAVAILABLE: 503,
 }
 
 const limits = {
@@ -17,17 +18,22 @@ const limits = {
   LIMIT_CONTACTS: 20,
   LIMIT_JSON: 10 * 1024,
   LIMIT_TIME: 15 * 60 * 1000,
-  LIMIT_REQUEST: 100,
+  LIMIT_REQUEST: 20,
   LIMIT_CREATE_ACC_TIME: 60 * 60 * 1000,
-  LIMIT_CREATE_REQUEST: 2,
+  LIMIT_CREATE_REQUEST: 5,
 }
 
 const messages = {
+  OK: 'Verification successful',
   BAD_REQUEST: 'error: missing fields',
+  BAD_REQUEST_USER: 'Verification has already been passed',
   CONFLICT: 'Email in use',
+  CONFLICT_VERIFY: 'Email has been verified',
   INVALID_OBJ_ID: 'Invalid ObjectId',
   NOT_FOUND: 'error: Contact Not Found',
   REMOVE: 'contact deleted',
+  RESUBMIT_OK: 'Verification email sent',
+  SERVICE_UNAVAILABLE: 'Service Unavailable',
   TOO_MANY_REQUESTS: 'User has sent too many requests recently',
   UNAUTHORIZED: 'Email or password is wrong',
   WRONG_FORMAT: 'Use for avatar image file',

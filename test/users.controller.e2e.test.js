@@ -41,14 +41,15 @@ describe('Test route users', () => {
   })
     
     test('Login User', async () => {
-        const {email, password} = newTestUser
-        const response = await request(app)
-            .post('/api/users/login')
-            .send({email, password})
-            .set('Accept', 'application/json')
-        expect(response.status).toEqual(HttpCode.OK)
-        expect(response.body).toBeDefined()
-        token = response.body.data.token
+      const { email, password } = newTestUser
+      await User.findOneAndUpdate({ email: email }, {verify: true}, {new: true})
+      const response = await request(app)
+        .post('/api/users/login')
+        .send({email, password})
+        .set('Accept', 'application/json')
+      expect(response.status).toEqual(HttpCode.OK)
+      expect(response.body).toBeDefined()
+      token = response.body.data.token
     })
     
     test('Empty Login User', async () => {
@@ -59,15 +60,25 @@ describe('Test route users', () => {
         expect(response.status).toEqual(HttpCode.BAD_REQUEST)
         expect(response.body).toBeDefined()
     })
+  
+  test('Upload Avatar User', async () => {
+    const buf = await fs.readFile('./test/data/avatar-female.jpg')
+    const response = await request(app)
+      .patch('/api/users/avatars')
+      .set('Authorization', `Bearer ${token}`)
+      .attach('avatar', buf, 'avatar-female.jpg')
+    expect(response.status).toEqual(HttpCode.OK)
+    expect(response.body).toBeDefined()
+    expect(response.body.data.avatarUrl).toEqual('secure_url')
+  })
 
-    test('Upload Avatar User', async () => {
-        const buf = await fs.readFile('./test/data/avatar-female.jpg')
+    test('Logout User', async () => {
         const response = await request(app)
-            .patch('/api/users/avatars')
-            .set('Authorization', `Bearer ${token}`)
-            .attach('avatar', buf, 'avatar-female.jpg')
-        expect(response.status).toEqual(HttpCode.OK)
+          .post('/api/users/logout')
+          .set('Authorization', `Bearer ${token}`)
+          .send()
+        .set('Accept', 'application/json')
+        expect(response.status).toEqual(HttpCode.NO_CONTENT)
         expect(response.body).toBeDefined()
-        expect(response.body.data.avatarUrl).toEqual('secure_url')
     })
 })

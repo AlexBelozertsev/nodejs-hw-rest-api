@@ -46,6 +46,21 @@ This app is a tutorial project for creating and working with users and their con
 
   ```
 
+- A letter with a link to verify your account will be sent to the email address specified during registration. If the letter has not arrived, look in the "Spam" tab. If the letter did not arrive, or was accidentally deleted, you can make a second registration request by going to the next route:
+  `POST` : `http://localhost:3000/api/users/verify`
+  In the body of the request, you must send the e-mail specified during registration for example:
+  `{"email": "newUser@gmail.com"}`
+  If the request is entered correctly, the response may look like this:
+
+  ```
+  {
+    "status": "success",
+    "code": 200,
+    "message": "Verification email sent"
+  }
+
+  ```
+
 - The user can change his avatar by adding an image (no more than 2 MB) along the following route:
   `PATCH`: `http://localhost:3000/api/users/avatars`
   As shown in the illustration, in the request body, select the "form factor" radio button and specify the
@@ -292,3 +307,24 @@ Pay attention to the token in the response. On subsequent requests to the server
 }
 
 ```
+
+// using Twilio SendGrid's v3 Node.js Library
+// https://github.com/sendgrid/sendgrid-nodejs
+javascript
+const sgMail = require('@sendgrid/mail')
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+const msg = {
+to: 'test@example.com', // Change to your recipient
+from: 'test@example.com', // Change to your verified sender
+subject: 'Sending with SendGrid is Fun',
+text: 'and easy to do anywhere, even with Node.js',
+html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+}
+sgMail
+.send(msg)
+.then(() => {
+console.log('Email sent')
+})
+.catch((error) => {
+console.error(error)
+})

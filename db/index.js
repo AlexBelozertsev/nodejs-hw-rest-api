@@ -18,7 +18,7 @@ const db = mongoose.connect(uriDB, {
 
 if (process.env.NODE_ENV !== 'test') {
     mongoose.connection.on('connected', () => {
-        console.log(`Connection open ${uriDb}`)
+        console.log(`Connection open ${uriDB}`)
     })
 }
 

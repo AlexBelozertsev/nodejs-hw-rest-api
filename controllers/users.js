@@ -1,9 +1,12 @@
-const Users = require('../repositories/users')
-const { HttpCode, messages } = require('../helpers/constants')
 const jwt = require('jsonwebtoken')
 const fs = require('fs/promises')
 require('dotenv').config()
 const SECRET_KEY = process.env.SECRET_KEY
+const Users = require('../repositories/users')
+const { HttpCode, messages } = require('../helpers/constants')
+const ErrorHandler = require('../helpers/errorHandler')
+const EmailService = require('../services/email')
+const {CreateSenderSendGrid, CreateSenderNodemailer} = require('../services/email-sender')
 
 const register = async (req, res, next) => {
   try {
@@ -14,15 +17,28 @@ const register = async (req, res, next) => {
       .json({
         status: 'error',
         code: HttpCode.CONFLICT,
-          message: messages.CONFLICT,
+        message: messages.CONFLICT,
       })
     }
-    const { id, email, subscription, avatarURL } = await Users.createUser(req.body)
-    return res.status(HttpCode.CREATED).json({
-      status: 'success',
-      code: HttpCode.CREATED,
-      data: { id, email, subscription, avatarURL },
-    })
+    const { id, name, email, subscription, avatarURL, verifyToken } = await Users.createUser(req.body)
+
+    try {
+      const emailService = new EmailService(
+        process.env.NODE_ENV,
+        new CreateSenderSendGrid(),
+      )
+      await emailService.sendVerifyEmail(verifyToken, email, name)
+    } catch (error) {
+      throw new ErrorHandler(HttpCode.SERVICE_UNAVAILABLE, error.message, messages.SERVICE_UNAVAILABLE)
+    }
+
+    return res
+      .status(HttpCode.CREATED)
+      .json({
+        status: 'success',
+        code: HttpCode.CREATED,
+        data: { id, name, email, subscription, avatarURL },
+      })
   } catch (err) {
     next(err)
   }
@@ -31,24 +47,24 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const user = await Users.findByEmail(req.body.email)
-    const {email, subscription} = user
+    const {email, subscription, verify} = user
     const isValidPassword = await user?.isValidPassword(req.body.password)
-    if (!user || !isValidPassword) {
+    if (!user || !isValidPassword || !verify) {
       return res
-      .status(HttpCode.UNAUTHORIZED)
+        .status(HttpCode.UNAUTHORIZED)
         .json({
           status: 'error',
-        code: HttpCode.UNAUTHORIZED,
-        message: messages.UNAUTHORIZED,
-      })
+          code: HttpCode.UNAUTHORIZED,
+          message: messages.UNAUTHORIZED,
+        })
     }
     const id = user.id
     const payload = { id }
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1d' })
     await Users.updateToken(id, token)
     return res
-    .status(HttpCode.OK)
-    .json({
+      .status(HttpCode.OK)
+      .json({
         status: 'success',
         code: HttpCode.OK,
         data: { token, email, subscription }
@@ -91,16 +107,19 @@ const update = async (req, res, next) => {
       const {name, email, subscription} = user
       if (user) {
         return res
-        .status(HttpCode.OK)
-          .json({ status: 'success', code: HttpCode.OK, data: { name, email, subscription } })
+          .status(HttpCode.OK)
+          .json({
+            status: 'success',
+            code: HttpCode.OK,
+            data: { name, email, subscription }
+          })
         }
       return res
-      .status(HttpCode.NOT_FOUND)
+        .status(HttpCode.NOT_FOUND)
         .json({
           status: 'error',
           code: HttpCode.NOT_FOUND,
           message: messages.NOT_FOUND,
-          data: 'Not Found'
         })
     } else {
       return res
@@ -109,7 +128,6 @@ const update = async (req, res, next) => {
           status: 'error',
           code: HttpCode.BAD_REQUEST,
           message: messages.BAD_REQUEST,
-          data: 'missing field'
       })
     }
   } catch (error) {
@@ -158,4 +176,64 @@ const avatars = async (req, res, next) => {
   }
 }
 
-module.exports = { register, login, logout, current, update, avatars }
+const verify = async (req, res, next) => {
+  try {
+    const user = await Users.findByVerifyToken(req.params.verificationToken)
+    if (user) {
+      await Users.updateTokenVerify(user.id, true, null)
+      return res
+        .status(HttpCode.OK)
+        .json({ status: 'success', code: HttpCode.OK, message: messages.OK })
+    }
+    return res
+      .status(HttpCode.BAD_REQUEST)
+      .json({
+        status: 'error',
+        code: HttpCode.BAD_REQUEST,
+        message: messages.BAD_REQUEST_USER,
+      })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const repeatEmailVerification = async (req, res, next) => {
+  try {
+    const user = await Users.findByEmail(req.body.email)
+    if (user) {
+      const { name, email, verify, verifyToken } = user
+      if (!verify) {
+        const emailService = new EmailService(
+          process.env.NODE_ENV,
+          new CreateSenderSendGrid(),
+        )
+        await emailService.sendVerifyEmail(verifyToken, email, name)
+        return res
+          .status(HttpCode.OK)
+          .json({
+            status: 'success',
+            code: HttpCode.OK,
+            message: messages.RESUBMIT_OK
+          })
+      }
+      return res
+        .status(HttpCode.BAD_REQUEST)
+        .json({
+          status: 'error',
+          code: HttpCode.BAD_REQUEST,
+          message: messages.BAD_REQUEST_USER,
+        })
+      }
+    return res
+      .status(HttpCode.BAD_REQUEST)
+      .json({
+        status: 'error',
+        code: HttpCode.BAD_REQUEST,
+        message: messages.BAD_REQUEST,
+      })
+  } catch (error) {
+    next(error)
+  }
+}
+
+module.exports = { register, login, logout, current, update, avatars, verify, repeatEmailVerification }
